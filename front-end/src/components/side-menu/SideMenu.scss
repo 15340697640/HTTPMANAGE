@@ -1,0 +1,49 @@
+.ant-menu {
+    height: 100vh;
+    background-color: #455e49;
+    color: #fff;
+}
+
+.logo {
+    background-color: #455e49;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+        // display: inline-block;
+        height: 60px;
+        width: 60px;
+        border-radius: 20px;
+        margin: 5px auto;
+    }
+}
+
+.span-prompt {
+    display: inline-box;
+    font-size: 10px;
+    margin-left: 8px;
+}
+
+:deep(.ant-menu-item-selected) {
+    color: #fdd663;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+:deep(.ant-menu-submenu-selected > .ant-menu-submenu-title) {
+    font-size: 16px;
+    color: #fdd663;
+    font-weight: bold;
+}
+
+:deep(.ant-layout-sider-trigger) {
+    background-color: #253c29;
+    color: #fff;
+    width: 225px;
+}
+
+:deep(.ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:active) {
+    font-size: 20px;
+    color: #fdd663;
+    background-color: #253c29;
+}

@@ -1,0 +1,11 @@
+:deep(.ant-layout-sider-trigger) {
+    background-color: #253c29;
+    color: #fff;
+    width: 225px;
+}
+:deep(.ant-menu-item-selected, .ant-menu-item-active, .ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:active, .ant-menu-light:not(.ant-menu-horizontal) .ant-menu-submenu-title:active) {
+    background-color: #253c29;
+}
+:deep(.ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:active) {
+    font-size: 20px;
+}

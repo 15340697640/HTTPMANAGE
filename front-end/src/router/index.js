@@ -1,7 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Login from '@/pages/login/Login.vue';
-import Main from '@/pages/main/Main.vue';
-import Project from '@/pages/project/Project.vue';
+import routesConfig from './config';
+
+// import Login from '@/pages/login/Login.vue';
+// import Home from '@/pages/home/Home.vue';
+// import Project from '@/pages/project/Project.vue';
+// import NotFound from '@/pages/not-found/NotFound.vue';
+
+const Login = () => import('@/pages/login/Login.vue');
+const Home = () => import('@/pages/home/Home.vue');
+const Project = () => import('@/pages/project/Project.vue');
+const NotFound = () => import('@/pages/not-found/NotFound.vue');
 
 const router = createRouter({
     history: createWebHistory(),
@@ -11,14 +19,35 @@ const router = createRouter({
             component: Login,
         },
         {
-            path: '/main',
-            component: Main,
+            path: '/',
+            redirect: '/home',
+        },
+        {
+            path: '/home',
+            name: 'home',
+            component: Home,
+            children: [],
         },
         {
             path: '/project',
             component: Project,
         },
+        {
+            path: '/:pathMatch(.*)*',
+            component: NotFound,
+        },
     ],
 });
+
+const AddRouter = () => {
+    console.log('进入');
+    routesConfig.forEach(item => {
+        router.addRoute('home', item);
+        console.log(item);
+    });
+};
+AddRouter();
+console.log('loaded');
+console.log(router.getRoutes());
 
 export default router;
