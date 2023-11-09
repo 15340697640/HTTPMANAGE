@@ -4,31 +4,12 @@
     </div>
     <a-menu
         v-model:selectedKeys="selectedKeys"
+        v-model:openKeys="openKeys"
+        :items="items"
         mode="inline"
         @click="handleClick"
+        :style="{ fontSize: '16px' }"
     >
-        <a-sub-menu key="/teams">
-            <template #title>
-                <span>
-                    <TeamOutlined />
-                    <span>我的团队</span>
-                </span>
-            </template>
-            <a-menu-item key="/teams">个人空间</a-menu-item>
-            <a-menu-item key="/teams:id">新建团队</a-menu-item>
-        </a-sub-menu>
-        <a-menu-item key="/apihub">
-            <CompassOutlined />
-            <span>API Hub</span>
-        </a-menu-item>
-        <a-menu-item key="/collectionProject">
-            <StarOutlined />
-            <span>我的收藏</span>
-        </a-menu-item>
-        <a-menu-item key="/visitedProject">
-            <HistoryOutlined />
-            <span>最近访问</span>
-        </a-menu-item>
     </a-menu>
 </template>
 <script setup>
@@ -37,12 +18,13 @@ import router from '@/router';
 import { TeamOutlined, StarOutlined, CompassOutlined, HistoryOutlined } from '@ant-design/icons-vue';
 
 // Dependenices
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, reactive, h, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 // Propertites
 const route = useRoute();
 const selectedKeys = ref(['/apihub']);
+const openKeys = ref(['/teams']);
 
 // Hooks
 onBeforeMount(() => {
@@ -50,8 +32,17 @@ onBeforeMount(() => {
 });
 
 // Methods
+const getItem = (label, key, icon, children) => {
+    return { label, key, icon, children };
+};
+const items = reactive([
+    getItem('我的团队', '/teams', () => h(TeamOutlined), [getItem('个人空间', '/teams'), getItem('新建团队', '/teams/:id')]),
+    getItem('API HUB', '/apiHUb', () => h(CompassOutlined)),
+    getItem('我的收藏', '/collectionProject', () => h(StarOutlined)),
+    getItem('最近访问', '/visitedProject', () => h(HistoryOutlined)),
+]);
+
 const handleClick = ({ key }) => {
-    console.log(key);
     router.push(key);
 };
 </script>

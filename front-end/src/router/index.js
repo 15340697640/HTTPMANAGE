@@ -40,14 +40,11 @@ const router = createRouter({
 });
 
 const AddRouter = () => {
-    console.log('进入');
     routesConfig.forEach(item => {
         router.addRoute('home', item);
-        console.log(item);
     });
 };
 AddRouter();
-console.log('loaded');
 console.log(router.getRoutes());
 
 export default router;

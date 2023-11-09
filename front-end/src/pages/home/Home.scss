@@ -1,3 +1,20 @@
+.ant-layout-header {
+    padding: 0;
+    background-color: #455e49;
+}
+.ant-layout-sider {
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #455e49;
+}
+.ant-layout-content {
+    margin: 24px 16px 0;
+    overflow: initial;
+}
 :deep(.ant-layout-sider-trigger) {
     background-color: #253c29;
     color: #fff;

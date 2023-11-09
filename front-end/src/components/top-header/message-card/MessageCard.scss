@@ -1,0 +1,20 @@
+.ant-card {
+    width: 500px;
+    border: 1px solid #b7b7b7;
+    border-radius: 30px;
+    background-color: #f7f7f7;
+}
+
+.receive-button,
+.reject-button {
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.receive-button {
+    color: #3fb680;
+    margin-right: 5px;
+}
+.reject-button {
+    color: #f4606c;
+}

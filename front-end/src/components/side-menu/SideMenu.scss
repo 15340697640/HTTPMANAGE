@@ -1,5 +1,4 @@
 .ant-menu {
-    height: 100vh;
     background-color: #455e49;
     color: #fff;
 }
@@ -18,20 +17,17 @@
     }
 }
 
-.span-prompt {
-    display: inline-box;
-    font-size: 10px;
-    margin-left: 8px;
+:deep(.ant-menu-item-icon) {
+    font-size: 18px !important;
 }
-
 :deep(.ant-menu-item-selected) {
     color: #fdd663;
-    font-size: 16px;
+    font-size: 19px;
     font-weight: bold;
 }
 
 :deep(.ant-menu-submenu-selected > .ant-menu-submenu-title) {
-    font-size: 16px;
+    font-size: 19px;
     color: #fdd663;
     font-weight: bold;
 }
@@ -45,5 +41,10 @@
 :deep(.ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:active) {
     font-size: 20px;
     color: #fdd663;
+    background-color: #253c29;
+}
+
+// 必须通过父节点透传
+.ant-menu :deep(.ant-menu-item:not(.ant-menu-item-selected):active) {
     background-color: #253c29;
 }

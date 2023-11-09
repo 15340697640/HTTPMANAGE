@@ -1,4 +1,42 @@
 .top-header-box {
-    background-color: #455e49;
-    height: 8%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .notification-box {
+        margin-right: 20px;
+        font-size: 35px;
+
+        .message-icon:hover {
+            color: orange;
+        }
+        :deep(.ant-popover-title) {
+            min-width: 0px !important;
+        }
+    }
+    .user-box {
+        margin-right: 20px;
+        img {
+            height: 50px;
+            height: 50px;
+            border-radius: 20px;
+        }
+    }
+}
+// .popoverStyle {
+//     .ant-popover-content {
+//         .ant-popover-inner {
+//             :deep(.ant-popover-title) {
+//                 min-width: 0px !important;
+//             }
+//         }
+//     }
+// }
+
+.ant-dropdown-menu :deep(.ant-dropdown-menu-item) :deep(.ant-dropdown-menu-item-icon) {
+    font-size: 18px;
+}
+
+.popver :deep(:where(.css-dev-only-do-not-override-185kyl0).ant-popover .ant-popover-title) {
+    min-width: 50px;
+    width: 50px !important;
 }
