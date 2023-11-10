@@ -1,8 +1,8 @@
-import service from '@/utils/axios.config';
+import service from '@/utils/axios.config.js';
 
 const loginService = {
     goLogin: (account, password) => {
-        return goLogin.post('/api/login', { account, password });
+        return service.post('/api/login', { account, password });
     },
 };
 

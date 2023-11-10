@@ -9,15 +9,11 @@
                 <a-popover
                     title="通知"
                     trigger="hover"
-                    :open="hovered"
-                    @openChange="handleHoverChange"
                     :overlayInnerStyle="{ padding: '0', textAlign: 'center' }"
                 >
                     <a-popover
                         color="#c6ddb2"
                         trigger="click"
-                        :open="clicked"
-                        @openChange="handleClickChange"
                     >
                         <template #content>
                             <div>
@@ -61,7 +57,7 @@ import MessageCard from '@/components/top-header/message-card/MessageCard.vue';
 import { ref, reactive, h, onMounted } from 'vue';
 
 const count = ref(5);
-const openCard = ref(false);
+
 const getItem = (label, key, icon) => {
     return { label, key, icon };
 };
