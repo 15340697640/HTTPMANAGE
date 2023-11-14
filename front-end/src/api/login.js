@@ -1,8 +1,19 @@
 import service from '@/utils/axios.config.js';
 
 const loginService = {
-    goLogin: (account, password) => {
-        return service.post('/api/login', { account, password });
+    goLogin: registerUserDto => {
+        console.log(loginUserDto);
+        return service.post('/api/userLogin', loginUserDto);
+    },
+    getCaptcha: email => {
+        return service.get(`/api/user/register-captcha`, {
+            params: {
+                emailAddress: email,
+            },
+        });
+    },
+    goRegister: registerUserDto => {
+        return service.post('/api/user/register', registerUserDto);
     },
 };
 

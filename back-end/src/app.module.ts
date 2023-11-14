@@ -1,11 +1,62 @@
 import { Module } from '@nestjs/common';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import 'winston-daily-rotate-file';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserLoginModule } from './user-login/userLogin.module';
-import { DemoModule } from './demo/demo.module';
+import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EmailModule } from './email/email.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
-  imports: [UserLoginModule, DemoModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: 'src/.env',
+    }),
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.DailyRotateFile({
+          dirname: `logs`, // 日志保存的目录
+          filename: '%DATE%.log', // 日志名称，占位符 %DATE% 取值为 datePattern 值。
+          datePattern: 'YYYY-MM-DD', // 日志轮换的频率，此处表示每天。
+          zippedArchive: true, // 是否通过压缩的方式归档被轮换的日志文件。
+          maxSize: '20m', // 设置日志文件的最大大小，m 表示 mb 。
+          maxFiles: '14d', // 保留日志文件的最大天数，此处表示自动删除超过 14 天的日志文件。
+          // 记录时添加时间戳信息
+          format: winston.format.combine(
+            winston.format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss',
+            }),
+            winston.format.json(),
+          ),
+        }),
+      ],
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory(configService: ConfigService) {
+        return {
+          type: 'mongodb',
+          host: configService.get('mongodb_server_host'), // 此处不能使用localhost，否则连接失败
+          port: configService.get('mongodb_server_port'),
+          database: configService.get('mongodb_server_database'),
+          retryDelay: 500,
+          retryAttempts: 10,
+          entities: [User],
+          logging: true,
+          synchronize: true,
+        };
+      },
+      inject: [ConfigService],
+    }),
+    UserModule,
+    EmailModule,
+    RedisModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

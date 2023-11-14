@@ -1,30 +1,24 @@
 import axios from 'axios';
 import qs from 'qs';
-import { isPlainObject } from 'is-plain-object';
+// import { isPlainObject } from 'is-plain-object';
 import md5 from 'blueimp-md5';
+import { signKey } from '@/assets/config';
+import { message } from 'ant-design-vue';
 
 const service = axios.create({
-    timeout: 500,
-    transformRequest: data => {
-        console.log('转换前', data);
-        if (isPlainObject(data)) {
-            console.log('转换后', qs.stringify(data));
-            return qs.stringify(data);
-        }
-        return data;
-    },
+    timeout: 5000,
 });
 
 service.interceptors.request.use(
     config => {
-        token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');
         if (token) {
             let time = +new Date(),
-                sign = md5(`${token}@${time}@蜜雪冰城甜蜜蜜`);
-            config.headers['authorzation'] = token;
-            config.headers['time'] = time;
+                sign = md5(`${token}@${time}@${signKey}`);
+            config.headers['Authorzation'] = token;
+            config.headers['Time'] = time;
             // 生成签名
-            config.headers['sign'] = sign;
+            config.headers['Sign'] = sign;
         }
         return config;
     },
@@ -34,10 +28,11 @@ service.interceptors.request.use(
 );
 service.interceptors.response.use(
     response => {
-        return response.data;
+        return response;
     },
     error => {
-        return Promise.reject(reason);
+        message.error(error.response.data.message);
+        return Promise.reject(error);
     }
 );
 export default service;

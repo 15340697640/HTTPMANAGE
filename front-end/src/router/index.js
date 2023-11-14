@@ -7,6 +7,8 @@ import routesConfig from './config';
 // import NotFound from '@/pages/not-found/NotFound.vue';
 
 const Login = () => import('@/pages/login/Login.vue');
+const Register = () => import('@/pages/register/Register.vue');
+const ForgetPassword = () => import('@/pages/forget-password/ForgetPassword.vue');
 const Home = () => import('@/pages/home/Home.vue');
 const Project = () => import('@/pages/project/Project.vue');
 const NotFound = () => import('@/pages/not-found/NotFound.vue');
@@ -17,6 +19,14 @@ const router = createRouter({
         {
             path: '/login',
             component: Login,
+        },
+        {
+            path: '/register',
+            component: Register,
+        },
+        {
+            path: '/forgetPassword',
+            component: ForgetPassword,
         },
         {
             path: '/',
