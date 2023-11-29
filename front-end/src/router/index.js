@@ -1,60 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import routesConfig from './config';
-
-// import Login from '@/pages/login/Login.vue';
-// import Home from '@/pages/home/Home.vue';
-// import Project from '@/pages/project/Project.vue';
-// import NotFound from '@/pages/not-found/NotFound.vue';
-
-const Login = () => import('@/pages/login/Login.vue');
-const Register = () => import('@/pages/register/Register.vue');
-const ForgetPassword = () => import('@/pages/forget-password/ForgetPassword.vue');
-const Home = () => import('@/pages/home/Home.vue');
-const Project = () => import('@/pages/project/Project.vue');
-const NotFound = () => import('@/pages/not-found/NotFound.vue');
+import routes from './config';
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: [
-        {
-            path: '/login',
-            component: Login,
-        },
-        {
-            path: '/register',
-            component: Register,
-        },
-        {
-            path: '/forgetPassword',
-            component: ForgetPassword,
-        },
-        {
-            path: '/',
-            redirect: '/home',
-        },
-        {
-            path: '/home',
-            name: 'home',
-            component: Home,
-            children: [],
-        },
-        {
-            path: '/project',
-            component: Project,
-        },
-        {
-            path: '/:pathMatch(.*)*',
-            component: NotFound,
-        },
-    ],
+    routes,
 });
 
-const AddRouter = () => {
-    routesConfig.forEach(item => {
-        router.addRoute('home', item);
-    });
-};
-AddRouter();
-console.log(router.getRoutes());
+// 每次路由跳转前判断用户是否登录
+router.beforeEach((to, from, next) => {
+    if (to.name === 'login') {
+        next();
+    } else {
+        if (!localStorage.getItem('access_token')) {
+            next({
+                path: 'login',
+            });
+        } else {
+            next();
+        }
+    }
+});
+
+// console.log(router.getRoutes());
 
 export default router;

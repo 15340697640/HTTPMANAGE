@@ -3,7 +3,6 @@ import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -11,6 +10,7 @@ import { User } from './user/entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailModule } from './email/email.module';
 import { RedisModule } from './redis/redis.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -49,6 +49,18 @@ import { RedisModule } from './redis/redis.module';
           entities: [User],
           logging: true,
           synchronize: true,
+        };
+      },
+      inject: [ConfigService],
+    }),
+    JwtModule.registerAsync({
+      global: true,
+      useFactory(configService: ConfigService) {
+        return {
+          secret: configService.get('jwt_secret'),
+          signOptions: {
+            expiresIn: configService.get('jwt_access_token_expires_time'),
+          },
         };
       },
       inject: [ConfigService],

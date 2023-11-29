@@ -8,6 +8,9 @@ import { HttpException } from '@nestjs/common/exceptions';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { HttpStatus } from '@nestjs/common/enums';
+import { JwtService } from '@nestjs/jwt/dist';
+import { LoginUserVo } from './vo/login-user.vo';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UserService {
@@ -16,6 +19,8 @@ export class UserService {
   private usersRepository: Repository<User>;
   @Inject(RedisService)
   private redisService: RedisService;
+  @Inject(JwtService)
+  private jwtService: JwtService;
 
   async register(payload: RegisterUserDto) {
     // 根据邮箱查询 redis 存储的验证码
@@ -55,5 +60,37 @@ export class UserService {
       return;
     }
   }
-  async login(payload: LoginUserDto) {}
+  async login(payload: LoginUserDto) {
+    const user = await this.usersRepository.findOneBy({
+      account: payload.account,
+    });
+    if (!user) {
+      throw new HttpException('用户不存在', HttpStatus.BAD_REQUEST);
+    }
+    if (user.password !== payload.password) {
+      throw new HttpException('密码错误', HttpStatus.BAD_REQUEST);
+    }
+    const vo = new LoginUserVo();
+    vo.userInfo = {
+      _id: user._id,
+      account: user.account,
+      password: user.password,
+      nickName: user.nickName,
+      email: user.email,
+      createTime: user.createTime,
+    };
+    return vo;
+  }
+  async findUserById(id: string) {
+    const user = await this.usersRepository.findOneBy({
+      _id: new ObjectId(id),
+      // account: 'admin',
+    });
+    console.log(user);
+    return {
+      id: user._id,
+      account: user.account,
+      email: user.email,
+    };
+  }
 }

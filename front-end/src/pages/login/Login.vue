@@ -65,9 +65,11 @@ import { reactive } from 'vue';
 import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
 import loginService from '@/api/login';
-import router from '@/router';
 import md5 from 'blueimp-md5';
 import { passwordKey } from '@/assets/config';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 // 先从本地取值
 const _account = Cookies.get('account') ? Cookies.get('account') : '';
@@ -83,7 +85,7 @@ const loginForm = reactive({
 });
 
 const rules = {
-    account: [{ required: true, pattern: '^[0-9]{11}$', message: '请输入长度为11位的账户' }],
+    account: [{ required: true, message: '请输入您的账户' }],
     password: [{ required: true, pattern: '^[a-zA-Z0-9]{6,15}$', message: '请输入长度为6-15位的密码' }],
 };
 
@@ -105,6 +107,9 @@ const onFinish = async values => {
         password: md5(`${loginForm.password}@${passwordKey}`),
     });
     console.log(res);
+    if (res.status === 201) {
+        router.push('/home');
+    }
 };
 </script>
 <style lang="scss" src="./Login.scss" scoped></style>

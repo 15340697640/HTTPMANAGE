@@ -1,9 +1,15 @@
-import { Entity, Column, ObjectIdColumn, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ObjectIdColumn,
+  CreateDateColumn,
+  ObjectId,
+} from 'typeorm';
 
 @Entity()
 export class User {
   @ObjectIdColumn() //
-  _id: number;
+  _id: ObjectId;
 
   @Column()
   account: string;
@@ -18,5 +24,5 @@ export class User {
   email: string;
 
   @CreateDateColumn({ type: 'timestamp' })
-  entryTime: Date;
+  createTime: Date;
 }
