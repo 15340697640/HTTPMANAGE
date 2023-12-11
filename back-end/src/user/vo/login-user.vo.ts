@@ -1,6 +1,6 @@
 import { ObjectId } from 'typeorm';
 interface UserInfo {
-  _id: ObjectId;
+  _id: number;
   account: string;
   password: string;
   nickName: string;

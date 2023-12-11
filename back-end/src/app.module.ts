@@ -40,15 +40,21 @@ import { JwtModule } from '@nestjs/jwt';
     TypeOrmModule.forRootAsync({
       useFactory(configService: ConfigService) {
         return {
-          type: 'mongodb',
-          host: configService.get('mongodb_server_host'), // 此处不能使用localhost，否则连接失败
-          port: configService.get('mongodb_server_port'),
-          database: configService.get('mongodb_server_database'),
+          type: 'mysql',
+          host: configService.get('mysql_server_host'), // 此处不能使用localhost，否则连接失败
+          port: configService.get('mysql_server_port'),
+          username: configService.get('mysql_server_username'),
+          password: configService.get('mysql_server_password'),
+          // 数据库名
+          database: configService.get('mysql_server_database'),
+
           retryDelay: 500,
           retryAttempts: 10,
           entities: [User],
           logging: true,
           synchronize: true,
+          poolSize: 10,
+          connectorPackage: 'mysql2',
         };
       },
       inject: [ConfigService],

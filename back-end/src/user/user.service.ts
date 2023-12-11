@@ -10,7 +10,6 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { HttpStatus } from '@nestjs/common/enums';
 import { JwtService } from '@nestjs/jwt/dist';
 import { LoginUserVo } from './vo/login-user.vo';
-import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UserService {
@@ -81,9 +80,9 @@ export class UserService {
     };
     return vo;
   }
-  async findUserById(id: string) {
+  async findUserById(id: number) {
     const user = await this.usersRepository.findOneBy({
-      _id: new ObjectId(id),
+      _id: id,
       // account: 'admin',
     });
     console.log(user);
