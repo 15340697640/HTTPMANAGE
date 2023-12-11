@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { Logger } from 'winston';
 import { RedisService } from 'src/redis/redis.service';
@@ -16,7 +16,7 @@ import { ObjectId } from 'mongodb';
 export class UserService {
   private logger = new Logger();
   @InjectRepository(User)
-  private usersRepository: Repository<User>;
+  private usersRepository: MongoRepository<User>;
   @Inject(RedisService)
   private redisService: RedisService;
   @Inject(JwtService)

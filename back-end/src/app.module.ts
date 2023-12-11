@@ -6,11 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailModule } from './email/email.module';
 import { RedisModule } from './redis/redis.module';
 import { JwtModule } from '@nestjs/jwt';
+import { TeamModule } from './team/team.module';
+import { User } from './user/entities/user.entity';
+import { Team } from './team/entities/team.entity';
 
 @Module({
   imports: [
@@ -41,14 +43,14 @@ import { JwtModule } from '@nestjs/jwt';
       useFactory(configService: ConfigService) {
         return {
           type: 'mongodb',
-          host: configService.get('mongodb_server_host'), // 此处不能使用localhost，否则连接失败
-          port: configService.get('mongodb_server_port'),
+          url: configService.get('mongodb_server_url'),
+          // host: configService.get('mongodb_server_host'), // 此处不能使用localhost，否则连接失败
+          // port: configService.get('mongodb_server_port'),
           database: configService.get('mongodb_server_database'),
           retryDelay: 500,
           retryAttempts: 10,
-          entities: [User],
+          entities: [User, Team],
           logging: true,
-          synchronize: true,
         };
       },
       inject: [ConfigService],
@@ -68,6 +70,7 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule,
     EmailModule,
     RedisModule,
+    TeamModule,
   ],
   controllers: [AppController],
   providers: [AppService],

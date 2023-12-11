@@ -20,6 +20,12 @@
         <a-input
             v-model:value="teamName"
             placeholder="团队名称"
+            style="margin-bottom: 24px"
+        />
+        <a-textarea
+            v-model:value="teamDiscription"
+            placeholder="团队描述"
+            :rows="4"
         />
     </a-modal>
 </template>
@@ -29,18 +35,20 @@ import router from '@/router';
 import { TeamOutlined, StarOutlined, CompassOutlined, HistoryOutlined, PlusOutlined } from '@ant-design/icons-vue';
 
 // Dependenices
-import { ref, onBeforeMount, reactive, h, watch } from 'vue';
+import { ref, onBeforeMount, reactive, h } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { v4 as uuidv4 } from 'uuid';
 
 // Propertites
 const route = useRoute();
-const selectedKeys = ref(['/apihub']);
-const openKeys = ref(['/teams']);
+const selectedKeys = ref([]);
+const openKeys = ref(['/home/teams']);
 
 const open = ref(false);
 const confirmLoading = ref(false);
 
 const teamName = ref('');
+const teamDiscription = ref('');
 // Hooks
 onBeforeMount(() => {
     selectedKeys.value[0] = route.fullPath;
@@ -52,11 +60,7 @@ const getItem = (label, title, key, icon, children) => {
     return { label, title, key, icon, children };
 };
 const items = reactive([
-    getItem('我的团队', '我的团队', '/home/teams', () => h(TeamOutlined), [
-        getItem('个人空间', '个人空间', '/home/teams'),
-        getItem('芜湖栽', '芜湖栽', '/home/teams/123123'),
-        getItem('新建团队', null, 'createTeam', () => h(PlusOutlined)),
-    ]),
+    getItem('我的团队', '我的团队', '/home/teams', () => h(TeamOutlined), [getItem('新建团队', null, 'createTeam', () => h(PlusOutlined))]),
     getItem('API HUB', null, '/home/apiHub', () => h(CompassOutlined)),
     getItem('我的收藏', null, '/home/collectionProject', () => h(StarOutlined)),
     getItem('最近访问', null, '/home/visitedProject', () => h(HistoryOutlined)),
@@ -68,19 +72,21 @@ const handleClick = ({ item, key }) => {
     } else router.push(key);
 };
 
+// create new team
 const showModal = () => {
     open.value = true;
 };
-const handleOk = () => {
+const handleOk = async () => {
     confirmLoading.value = true;
-    setTimeout(() => {
-        open.value = false;
-        confirmLoading.value = false;
-        // Push the element just created before the last element of the array
-        // 将刚才创建的元素推入数组最后一个元素之前
-        const target = items[0].children.length - 1;
-        items[0].children.splice(target, 0, getItem(teamName.value, teamName.value, '/home/teams/456456'));
-    }, 100);
+    open.value = false;
+    confirmLoading.value = false;
+    // Push the element just created before the last element of the array
+    // 将刚才创建的元素推入数组最后一个元素之前
+    const target = items[0].children.length - 1;
+    const pathId = uuidv4().toString().replace(/\D/g, '').slice(0, 8);
+    items[0].children.splice(target, 0, getItem(teamName.value, teamName.value, `/home/teams/${pathId}`));
+    router.push(`/home/teams/${pathId}`);
+    selectedKeys.value[0] = `/home/teams/${pathId}`;
 };
 </script>
 

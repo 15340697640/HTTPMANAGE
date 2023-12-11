@@ -1,9 +1,11 @@
+import { Team } from 'src/team/entities/team.entity';
 import {
   Entity,
   Column,
   ObjectIdColumn,
   CreateDateColumn,
   ObjectId,
+  ManyToMany,
 } from 'typeorm';
 
 @Entity()
@@ -25,4 +27,7 @@ export class User {
 
   @CreateDateColumn({ type: 'timestamp' })
   createTime: Date;
+
+  @ManyToMany(() => Team, (team) => team.members)
+  teams: Team[];
 }

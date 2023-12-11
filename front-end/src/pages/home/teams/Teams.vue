@@ -37,5 +37,8 @@ const items = ref([
         label: '团队设置',
     },
 ]);
+
+// Hooks
+onBeforeMount(() => {});
 </script>
 <style lang="scss" src="./Teams.scss" scoped></style>
