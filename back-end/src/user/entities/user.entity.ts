@@ -1,9 +1,17 @@
-import { Entity, Column, CreateDateColumn, PrimaryColumn } from 'typeorm';
+import { Team } from 'src/team/entities/team.entity';
+import {
+  Entity,
+  Column,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryColumn() //
-  _id: number;
+  @PrimaryGeneratedColumn() //
+  id: number;
 
   @Column()
   account: string;
@@ -17,6 +25,13 @@ export class User {
   @Column()
   email: string;
 
+  @Column()
+  role: number;
+
   @CreateDateColumn({ type: 'timestamp' })
   createTime: Date;
+
+  // @ManyToMany(() => Team, (team) => team.users)
+  // @JoinTable()
+  // teams: Team[];
 }

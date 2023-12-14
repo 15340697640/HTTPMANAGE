@@ -5,6 +5,13 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [vue()],
+    lintOnsave: false,
+    devServer: {
+        overlay: {
+            errors: false,
+            warnings: false,
+        },
+    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),

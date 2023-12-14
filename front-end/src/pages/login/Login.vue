@@ -64,12 +64,14 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { reactive } from 'vue';
 import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
-import loginService from '@/api/login';
+import api from '@/api/index';
 import md5 from 'blueimp-md5';
 import { passwordKey } from '@/assets/config';
 import { useRouter } from 'vue-router';
+import { useUserInfoStore } from '@/store/userInfoStore';
 
 const router = useRouter();
+const userInfoStore = useUserInfoStore();
 
 // 先从本地取值
 const _account = Cookies.get('account') ? Cookies.get('account') : '';
@@ -102,12 +104,12 @@ const onFinish = async values => {
     } else {
         Cookies.remove('password');
     }
-    const res = await loginService.goLogin({
+    const res = await api.loginService.goLogin({
         account: loginForm.account,
         password: md5(`${loginForm.password}@${passwordKey}`),
     });
-    console.log(res);
     if (res.status === 201) {
+        userInfoStore.changeUserInfo(res.data.userInfo);
         router.push('/home');
     }
 };

@@ -52,7 +52,7 @@ export class UserController {
 
     vo.accessToken = this.jwtService.sign(
       {
-        userId: vo.userInfo._id,
+        userId: vo.userInfo.id,
         account: vo.userInfo.account,
         email: vo.userInfo.email,
       },
@@ -64,7 +64,7 @@ export class UserController {
 
     vo.refreshToken = this.jwtService.sign(
       {
-        userId: vo.userInfo._id,
+        userId: vo.userInfo.id,
       },
       {
         expiresIn:
@@ -82,7 +82,7 @@ export class UserController {
       const user = await this.userService.findUserById(data.userId);
       const access_token = this.jwtService.sign(
         {
-          userId: user.id,
+          userId: user.userId,
           account: user.account,
           email: user.email,
         },
@@ -94,7 +94,7 @@ export class UserController {
 
       const refresh_token = this.jwtService.sign(
         {
-          userId: user.id,
+          userId: user.userId,
         },
         {
           expiresIn:

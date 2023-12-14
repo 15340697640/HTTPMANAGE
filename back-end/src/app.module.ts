@@ -6,11 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailModule } from './email/email.module';
 import { RedisModule } from './redis/redis.module';
 import { JwtModule } from '@nestjs/jwt';
+import { TeamModule } from './team/team.module';
+import { User } from './user/entities/user.entity';
+import { Team } from './team/entities/team.entity';
+import { Member } from './member/entities/member.entity';
+import { MemberModule } from './member/member.module';
 
 @Module({
   imports: [
@@ -45,12 +49,10 @@ import { JwtModule } from '@nestjs/jwt';
           port: configService.get('mysql_server_port'),
           username: configService.get('mysql_server_username'),
           password: configService.get('mysql_server_password'),
-          // 数据库名
           database: configService.get('mysql_server_database'),
-
           retryDelay: 500,
           retryAttempts: 10,
-          entities: [User],
+          entities: [User, Team, Member],
           logging: true,
           synchronize: true,
           poolSize: 10,
@@ -74,6 +76,8 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule,
     EmailModule,
     RedisModule,
+    TeamModule,
+    MemberModule,
   ],
   controllers: [AppController],
   providers: [AppService],

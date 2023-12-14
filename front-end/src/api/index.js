@@ -1,2 +1,8 @@
 // 统一封装暴露
-export * as loginService from './login';
+import loginService from './login.js';
+import teamService from './team.js';
+
+export default {
+    loginService,
+    teamService,
+};

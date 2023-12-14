@@ -1,28 +1,18 @@
-const Login = () => import('@/pages/login/Login.vue');
-const Register = () => import('@/pages/register/Register.vue');
-const ForgetPassword = () => import('@/pages/forget-password/ForgetPassword.vue');
-const Home = () => import('@/pages/home/Home.vue');
-const Project = () => import('@/pages/project/Project.vue');
-const NotFound = () => import('@/pages/not-found/NotFound.vue');
-
-const Teams = () => import('@/pages/home/teams/Teams.vue');
-const CollectionProject = () => import('@/pages/home/collection-project/CollectionProject.vue');
-const ApiHub = () => import('@/pages/home/apihub/ApiHub.vue');
-const VisitedProject = () => import('@/pages/home/visited-project/VisitedProject.vue');
-
 const routes = [
     {
         path: '/login',
         name: 'login',
-        component: Login,
+        component: () => import('@/pages/login/Login.vue'),
     },
     {
         path: '/register',
-        component: Register,
+        name: 'register',
+        component: () => import('@/pages/register/Register.vue'),
     },
     {
         path: '/forgetPassword',
-        component: ForgetPassword,
+        name: 'forgetPassword',
+        component: () => import('@/pages/forget-password/ForgetPassword.vue'),
     },
     {
         path: '/',
@@ -31,33 +21,33 @@ const routes = [
     {
         path: '/home',
         name: 'home',
-        component: Home,
+        component: () => import('@/pages/home/Home.vue'),
         children: [
             {
                 path: 'project',
-                component: Project,
+                component: () => import('@/pages/project/Project.vue'),
             },
             {
                 path: 'teams/:id?',
-                component: Teams,
+                component: () => import('@/pages/home/teams/Teams.vue'),
             },
             {
                 path: 'collectionProject',
-                component: CollectionProject,
+                component: () => import('@/pages/home/collection-project/CollectionProject.vue'),
             },
             {
                 path: 'apiHub',
-                component: ApiHub,
+                component: () => import('@/pages/home/apihub/ApiHub.vue'),
             },
             {
                 path: 'visitedProject',
-                component: VisitedProject,
+                component: () => import('@/pages/home/visited-project/VisitedProject.vue'),
             },
         ],
     },
     {
         path: '/:pathMatch(.*)*',
-        component: NotFound,
+        component: () => import('@/pages/not-found/NotFound.vue'),
     },
 ];
 export default routes;

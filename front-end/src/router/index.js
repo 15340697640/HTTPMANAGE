@@ -7,20 +7,16 @@ const router = createRouter({
 });
 
 // 每次路由跳转前判断用户是否登录
-router.beforeEach((to, from, next) => {
-    if (to.name === 'login') {
-        next();
+router.beforeEach((to, from) => {
+    if (to.name === 'login' || to.name === 'register' || to.name === 'forgetPassword') {
+        return true;
     } else {
         if (!localStorage.getItem('access_token')) {
-            next({
-                path: 'login',
-            });
+            return { name: 'login' };
         } else {
-            next();
+            return true;
         }
     }
 });
-
-// console.log(router.getRoutes());
 
 export default router;

@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { RedisService } from 'src/redis/redis.service';
 import { HttpException } from '@nestjs/common/exceptions';
@@ -13,9 +14,10 @@ import { LoginUserVo } from './vo/login-user.vo';
 
 @Injectable()
 export class UserService {
+  @Inject(WINSTON_MODULE_NEST_PROVIDER)
   private logger = new Logger();
   @InjectRepository(User)
-  private usersRepository: Repository<User>;
+  private usersRepository: MongoRepository<User>;
   @Inject(RedisService)
   private redisService: RedisService;
   @Inject(JwtService)
@@ -24,7 +26,6 @@ export class UserService {
   async register(payload: RegisterUserDto) {
     // 根据邮箱查询 redis 存储的验证码
     const captcha = await this.redisService.get(`captcha_${payload.email}`);
-
     // 若验证码失效
     if (!captcha) {
       throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST);
@@ -50,12 +51,14 @@ export class UserService {
     newUser.nickName = payload.nickName;
 
     try {
+      console.log(newUser);
       await this.usersRepository.save(newUser);
       return {
         result: 'OK',
       };
     } catch (e) {
-      this.logger.error(e, UserService);
+      console.log(e);
+      this.logger.error(e);
       return;
     }
   }
@@ -71,7 +74,7 @@ export class UserService {
     }
     const vo = new LoginUserVo();
     vo.userInfo = {
-      _id: user._id,
+      id: user.id,
       account: user.account,
       password: user.password,
       nickName: user.nickName,
@@ -82,12 +85,10 @@ export class UserService {
   }
   async findUserById(id: number) {
     const user = await this.usersRepository.findOneBy({
-      _id: id,
-      // account: 'admin',
+      id: id,
     });
-    console.log(user);
     return {
-      id: user._id,
+      userId: user.id,
       account: user.account,
       email: user.email,
     };

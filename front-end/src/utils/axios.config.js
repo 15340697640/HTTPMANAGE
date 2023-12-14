@@ -7,7 +7,7 @@ import { message } from 'ant-design-vue';
 import loginService from '@/api/login';
 
 const service = axios.create({
-    timeout: 5000,
+    timeout: 50000,
 });
 
 service.interceptors.request.use(
@@ -24,6 +24,7 @@ service.interceptors.request.use(
         return config;
     },
     error => {
+        console.log(error);
         return Promise.reject(error);
     }
 );
