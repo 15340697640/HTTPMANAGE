@@ -14,7 +14,12 @@ import { TeamModule } from './team/team.module';
 import { User } from './user/entities/user.entity';
 import { Team } from './team/entities/team.entity';
 import { Member } from './member/entities/member.entity';
+import { ProjectBrief } from './project/entities/project-brief.entity';
 import { MemberModule } from './member/member.module';
+import { ProjectModule } from './project/project.module';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { LoginGuard } from './login.guard';
 
 @Module({
   imports: [
@@ -52,7 +57,7 @@ import { MemberModule } from './member/member.module';
           database: configService.get('mysql_server_database'),
           retryDelay: 500,
           retryAttempts: 10,
-          entities: [User, Team, Member],
+          entities: [User, Team, Member, ProjectBrief],
           logging: true,
           synchronize: true,
           poolSize: 10,
@@ -78,8 +83,16 @@ import { MemberModule } from './member/member.module';
     RedisModule,
     TeamModule,
     MemberModule,
+    ProjectModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: LoginGuard,
+    },
+  ],
 })
 export class AppModule {}

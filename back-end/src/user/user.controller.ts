@@ -1,10 +1,19 @@
-import { Controller, Post, Body, Inject, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Inject,
+  Get,
+  Query,
+  SetMetadata,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { EmailService } from 'src/email/email.service';
 import { RedisService } from 'src/redis/redis.service';
+import { AuthService } from 'src/auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { HttpException } from '@nestjs/common/exceptions';
@@ -25,6 +34,9 @@ export class UserController {
 
   @Inject(ConfigService)
   private configService: ConfigService;
+
+  @Inject(AuthService)
+  private authService: AuthService;
 
   @Post('/register')
   async register(@Body() registerUserDto: RegisterUserDto) {
@@ -47,30 +59,39 @@ export class UserController {
   }
 
   @Post('/login')
+  @SetMetadata('is-public', true)
   async login(@Body() loginUserDto: LoginUserDto) {
     const vo = await this.userService.login(loginUserDto);
 
-    vo.accessToken = this.jwtService.sign(
-      {
-        userId: vo.userInfo.id,
-        account: vo.userInfo.account,
-        email: vo.userInfo.email,
-      },
-      {
-        expiresIn:
-          this.configService.get('jwt_access_token_expires_time') || '30m',
-      },
-    );
+    // vo.accessToken = this.jwtService.sign(
+    //   {
+    //     userId: vo.userInfo.id,
+    //     account: vo.userInfo.account,
+    //     email: vo.userInfo.email,
+    //   },
+    //   {
+    //     expiresIn:
+    //       this.configService.get('jwt_access_token_expires_time') || '30m',
+    //   },
+    // );
+    vo.accessToken = this.authService.generateAccessToken({
+      userId: vo.userInfo.id,
+      account: vo.userInfo.account,
+      email: vo.userInfo.email,
+    });
 
-    vo.refreshToken = this.jwtService.sign(
-      {
-        userId: vo.userInfo.id,
-      },
-      {
-        expiresIn:
-          this.configService.get('jwt_refresh_token_expires_time') || '7d',
-      },
-    );
+    // vo.refreshToken = this.jwtService.sign(
+    //   {
+    //     userId: vo.userInfo.id,
+    //   },
+    //   {
+    //     expiresIn:
+    //       this.configService.get('jwt_refresh_token_expires_time') || '7d',
+    //   },
+    // );
+    vo.refreshToken = this.authService.generateRefreshToken({
+      userId: vo.userInfo.id,
+    });
     return vo;
   }
 
@@ -78,30 +99,37 @@ export class UserController {
   @Get('/refresh')
   async refresh(@Query('refreshToken') refreshToken: string) {
     try {
-      const data = this.jwtService.verify(refreshToken);
+      // const data = this.jwtService.verify(refreshToken);
+      const data = this.authService.verifyToken(refreshToken);
       const user = await this.userService.findUserById(data.userId);
-      const access_token = this.jwtService.sign(
-        {
-          userId: user.userId,
-          account: user.account,
-          email: user.email,
-        },
-        {
-          expiresIn:
-            this.configService.get('jwt_access_token_expires_time') || '30m',
-        },
-      );
-
-      const refresh_token = this.jwtService.sign(
-        {
-          userId: user.userId,
-        },
-        {
-          expiresIn:
-            this.configService.get('jwt_refresh_token_expires_time') || '7d',
-        },
-      );
-
+      // const access_token = this.jwtService.sign(
+      //   {
+      //     userId: user.userId,
+      //     account: user.account,
+      //     email: user.email,
+      //   },
+      //   {
+      //     expiresIn:
+      //       this.configService.get('jwt_access_token_expires_time') || '30m',
+      //   },
+      // );
+      const access_token = this.authService.generateAccessToken({
+        userId: user.userId,
+        account: user.account,
+        email: user.email,
+      });
+      // const refresh_token = this.jwtService.sign(
+      //   {
+      //     userId: user.userId,
+      //   },
+      //   {
+      //     expiresIn:
+      //       this.configService.get('jwt_refresh_token_expires_time') || '7d',
+      //   },
+      // );
+      const refresh_token = this.authService.generateRefreshToken({
+        userId: user.userId,
+      });
       return {
         access_token,
         refresh_token,

@@ -1,0 +1,51 @@
+.container-box {
+    // margin-top: 16px;s
+    display: flex;
+    flex-wrap: wrap;
+    .card-box {
+        margin: 24px 16px 0 0;
+        cursor: pointer;
+        .title-box {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            span {
+                font-size: 18px;
+            }
+            .icons-box {
+                .collected {
+                    color: orange !important;
+                }
+                .icon-item {
+                    color: #444;
+                }
+                .icon-item:hover {
+                    color: orange;
+                    background-color: #f8f8f8;
+                }
+            }
+        }
+        .discription-box {
+            font-size: 12px;
+            overflow: hidden;
+            text-overflow: eclipses;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-height: 20px;
+            height: 40px;
+        }
+
+        .time-box {
+            font-size: 10px;
+            color: #777;
+        }
+    }
+    .card-box:hover {
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+    }
+}
+:deep(.ant-card-body) {
+    padding: 16px;
+}

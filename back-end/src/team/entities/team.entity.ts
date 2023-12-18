@@ -6,8 +6,11 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Member } from 'src/member/entities/member.entity';
+import { ProjectBrief } from 'src/project/entities/project-brief.entity';
 
-@Entity()
+@Entity({
+  name: 'team',
+})
 export class Team {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,6 +30,8 @@ export class Team {
   @OneToMany(() => Member, (member) => member.team, { cascade: true })
   members: Member[];
 
-  // @ManyToMany(() => User, (user) => user.teams)
-  // users: User[];
+  @OneToMany(() => ProjectBrief, (projectBrief) => projectBrief.team, {
+    cascade: true,
+  })
+  projectBriefs: ProjectBrief[];
 }

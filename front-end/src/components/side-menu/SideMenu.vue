@@ -35,7 +35,7 @@ import { TeamOutlined, StarOutlined, CompassOutlined, HistoryOutlined, PlusOutli
 
 // Dependenices
 import router from '@/router';
-import { ref, onMounted, reactive, h } from 'vue';
+import { ref, reactive, h } from 'vue';
 import { useRoute } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import api from '@/api/index';
@@ -46,7 +46,7 @@ import { useTeamStore } from '@/store/teamStore';
 const userInfoStore = useUserInfoStore();
 const teamStore = useTeamStore();
 const route = useRoute();
-const selectedKeys = ref([]);
+const selectedKeys = ref([route.fullPath.split('?')[0]]);
 const openKeys = ref(['/home/teams']);
 
 const open = ref(false);
@@ -147,9 +147,6 @@ const handleOk = async () => {
 };
 
 // Hooks
-onMounted(() => {
-    selectedKeys.value[0] = route.fullPath.split('?')[0];
-});
 </script>
 
 <style lang="scss" src="./SideMenu.scss" scoped></style>

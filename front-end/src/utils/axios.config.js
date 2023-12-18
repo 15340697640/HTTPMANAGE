@@ -16,7 +16,7 @@ service.interceptors.request.use(
         if (accessToken) {
             let time = +new Date(),
                 sign = md5(`${accessToken}@${time}@${signKey}`);
-            config.headers['Authorzation'] = accessToken;
+            config.headers['authorization'] = 'Bearer ' + accessToken;
             config.headers['Time'] = time;
             // 生成签名
             config.headers['Sign'] = sign;

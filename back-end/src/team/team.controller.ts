@@ -12,10 +12,11 @@ export class TeamController {
   async getTeams(@Query('email') email: string) {
     return await this.teamService.getTeams(email);
   }
-  // @Get('allMember')
-  // async getAllMembers() {
-  //   return await this.teamService.getAllMembers();
-  // }
+
+  @Get('getTeamProjects')
+  async getTeamProject(@Query('teamId') teamId: string) {
+    return await this.teamService.getTeamProject(teamId);
+  }
   @Post('addTeam')
   async addTeam(@Body() payload: CreateTeamDto) {
     return await this.teamService.addTeam(payload);
