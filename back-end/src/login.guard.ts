@@ -44,18 +44,28 @@ export class LoginGuard implements CanActivate {
     if (isPublic) {
       return true;
     }
+    const sign = request.headers.sign || '';
+    const time = request.headers.time || '';
+    console.log(sign);
     const authorization = request.headers.authorization || '';
     const bearer = authorization.split(' ');
-    console.log(bearer);
 
     if (!bearer || bearer.length < 2) {
       throw new UnauthorizedException('用户未登录');
     }
 
     const token = authorization.split(' ')[1];
-    try {
-      const data = this.authService.verifyToken(token);
 
+    try {
+      // 第一步：校验token是否有效
+      const data = this.authService.verifyToken(token);
+      // 第二步：验证签名
+      this.authService.verifySign(
+        sign as string,
+        token,
+        time as string,
+        data.userId,
+      );
       request.user = {
         userId: data.userId,
         account: data.account,

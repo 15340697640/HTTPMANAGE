@@ -2,6 +2,8 @@ import { Global, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
 
 @Global()
 @Module({
@@ -18,6 +20,7 @@ import { ConfigService } from '@nestjs/config';
       },
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([User]),
   ],
   providers: [AuthService],
   exports: [AuthService],

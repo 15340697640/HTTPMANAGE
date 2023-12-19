@@ -25,6 +25,9 @@ export class User {
   @Column()
   role: number;
 
+  @Column()
+  signature: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   createTime: Date;
 }

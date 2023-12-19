@@ -39,12 +39,14 @@ export class UserController {
   private authService: AuthService;
 
   @Post('/register')
+  @SetMetadata('is-public', true)
   async register(@Body() registerUserDto: RegisterUserDto) {
     await this.userService.register(registerUserDto);
     return 'success';
   }
 
   @Get('/register-captcha')
+  @SetMetadata('is-public', true)
   async captcha(@Query('emailAddress') emailAddress: string) {
     const code = Math.random().toString().slice(2, 8);
 
@@ -97,6 +99,7 @@ export class UserController {
 
   // 刷新接口
   @Get('/refresh')
+  @SetMetadata('is-public', true)
   async refresh(@Query('refreshToken') refreshToken: string) {
     try {
       // const data = this.jwtService.verify(refreshToken);

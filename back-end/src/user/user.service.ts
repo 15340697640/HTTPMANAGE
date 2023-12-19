@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
@@ -11,13 +10,13 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { HttpStatus } from '@nestjs/common/enums';
 import { JwtService } from '@nestjs/jwt/dist';
 import { LoginUserVo } from './vo/login-user.vo';
-
+import { Repository } from 'typeorm';
 @Injectable()
 export class UserService {
   @Inject(WINSTON_MODULE_NEST_PROVIDER)
   private logger = new Logger();
   @InjectRepository(User)
-  private usersRepository: MongoRepository<User>;
+  private usersRepository: Repository<User>;
   @Inject(RedisService)
   private redisService: RedisService;
   @Inject(JwtService)
